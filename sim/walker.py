@@ -49,13 +49,13 @@ class WFunc:
     def __init__(self, **kwargs):
         self.parameters = {}
 
-        self.parameters["swing_scale"] = 0
-        self.parameters["step_scale"] = 0.3
-        self.parameters["step_offset"] = 0.55
+        self.parameters["swing_scale"] = 0.3
+        self.parameters["step_scale"] = 0.21
+        self.parameters["step_offset"] = 0.5
         self.parameters["ankle_offset"] = 0
-        self.parameters["vx_scale"] = 0.5
-        self.parameters["vy_scale"] = 0.5
-        self.parameters["vt_scale"] = 0.4
+        self.parameters["vx_scale"] = 0.22
+        self.parameters["vy_scale"] = 0.9
+        self.parameters["vt_scale"] = 0.6
 
         for k, v in kwargs.items():
             self.parameters[k] = v
@@ -73,7 +73,7 @@ class WFunc:
         # ~ print f
         f1 = WJFunc()
         f1.in_scale = math.pi
-        f1.scale = -self.parameters["swing_scale"]
+        f1.scale = self.parameters["swing_scale"]
         self.pfn["l_ank_roll"] = f1
         self.pfn["l_hip_roll"] = f1
 
@@ -86,7 +86,7 @@ class WFunc:
         f3 = WJFunc()
         f3.in_scale = math.pi
         f3.scale = self.parameters["step_scale"]
-        f3.offset = self.parameters["step_offset"]
+        f3.offset = -self.parameters["step_offset"]
         self.pfn["l_hip_pitch"] = f3
         f33 = f3.mirror()
         f33.offset += self.parameters["ankle_offset"]
@@ -227,7 +227,6 @@ class Walker:
 
         # ~ self.ready_pos=get_walk_angles(10)
         self.ready_pos = self.func.get(True, 0, [0, 0, 0])
-
         self._th_walk = None
 
     def cmd_vel(self, vx, vy, vt):
@@ -240,7 +239,9 @@ class Walker:
         If not there yet, go to initial walk position
         """
         if self.get_dist_to_ready() > 0.02:
+            self.updateready_pos()
             self.op3.set_angles_slow(self.ready_pos)
+
 
     def start(self):
         if not self.running:
@@ -287,6 +288,12 @@ class Walker:
             time.sleep(1. / 100.)
 
         self._th_walk = None
+
+    def updateready_pos(self):
+        self.ready_pos['l_sho_roll'] = 0.8
+        self.ready_pos['r_sho_roll'] = -0.8
+        self.ready_pos['l_el'] = -0.7
+        self.ready_pos['r_el'] = 0.7
 
     def is_walking(self):
         e = 0.02
