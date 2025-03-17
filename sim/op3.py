@@ -31,7 +31,7 @@ class OP3:
         p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
         p.setAdditionalSearchPath(pybullet_data.getDataPath())  # optionally
         p.setGravity(0, 0, -9.8)
-        op3StartPos = [0, 0, 1]
+        op3StartPos = [0, 0, 0.3]
         op3StartOrientation = p.getQuaternionFromEuler([0, 0, 0])
         self.planeId = p.loadURDF("plane.urdf")
         self.robot = p.loadURDF("../models/robotis_op3.urdf", op3StartPos, op3StartOrientation)

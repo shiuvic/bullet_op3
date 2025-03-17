@@ -49,13 +49,13 @@ class WFunc:
     def __init__(self, **kwargs):
         self.parameters = {}
 
-        self.parameters["swing_scale"] = 0.3
-        self.parameters["step_scale"] = 0.21
-        self.parameters["step_offset"] = 0.5
+        self.parameters["swing_scale"] = 0.0
+        self.parameters["step_scale"] = 0.1
+        self.parameters["step_offset"] = 0.25
         self.parameters["ankle_offset"] = 0
-        self.parameters["vx_scale"] = 0.22
-        self.parameters["vy_scale"] = 0.9
-        self.parameters["vt_scale"] = 0.6
+        self.parameters["vx_scale"] = 0.2
+        self.parameters["vy_scale"] = 0.2
+        self.parameters["vt_scale"] = 0.1
 
         for k, v in kwargs.items():
             self.parameters[k] = v
@@ -275,7 +275,7 @@ class Walker:
                 self.velocity = [0, 0, 0]
             if not self.is_walking() and i == 0:  # Do not move if nothing to do and already at 0
                 self.update_velocity(self.velocity, n)
-                time.sleep(1. / 100.)
+                time.sleep(1. / 240.)
                 continue
             x = float(i) / n
             angles = func.get(p, x, self.current_velocity)
@@ -285,7 +285,7 @@ class Walker:
             if i > n:
                 i = 0
                 p = not p
-            time.sleep(1. / 100.)
+            time.sleep(1. / 240.)
 
         self._th_walk = None
 
@@ -348,4 +348,4 @@ if __name__ == "__main__":
     walker.set_velocity(1, 0, 0)
 
     while True:
-        time.sleep(1)
+        time.sleep(0.5)
