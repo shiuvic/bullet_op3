@@ -41,7 +41,7 @@ class OP3:
 
         self.update_angle_th()
         # We go real-time simulation rather than call stepSimulation
-        p.setRealTimeSimulation(1)
+        self.run_sim_th()
         self._set_joint()
 
         self.joints = op3_joints
@@ -85,6 +85,13 @@ class OP3:
         for joint in range(self.numJoints):
             print(p.getJointInfo(self.robot, joint))
             p.setJointMotorControl(self.robot, joint, p.POSITION_CONTROL, self.targetVel, self.maxForce)
+
+    def run_sim_th(self):
+        def _cb_sim():
+            while True:
+                p.stepSimulation()
+                time.sleep(1.0 / (240.0))
+        Thread(target=_cb_sim).start()
 
     def run(self):
         try:
